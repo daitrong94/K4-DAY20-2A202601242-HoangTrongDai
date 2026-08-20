@@ -12,6 +12,7 @@ from multi_agent_research_lab.agents.supervisor import DONE, SupervisorAgent
 from multi_agent_research_lab.agents.writer import WriterAgent
 from multi_agent_research_lab.core.config import get_settings
 from multi_agent_research_lab.core.state import ResearchState
+from multi_agent_research_lab.observability.tracing import trace_span
 
 _WORKERS = ("researcher", "analyst", "writer", "critic")
 
@@ -70,8 +71,12 @@ class MultiAgentWorkflow:
         compiled = self.build()
         # Each supervisor decision plus each worker call counts as a graph step, so give the
         # recursion limit enough headroom for a full researcher/analyst/writer/critic pass.
-        result: Any = compiled.invoke(
-            state,
-            config={"recursion_limit": settings.max_iterations * len(_WORKERS) + 10},
-        )
+        # This span is the trace root: every agent span opened while it's running (see
+        # trace_span() in observability/tracing.py) nests under it as a child in LangSmith,
+        # instead of each agent showing up as its own unrelated run.
+        with trace_span("multi_agent_workflow", {"query": state.request.query}):
+            result: Any = compiled.invoke(
+                state,
+                config={"recursion_limit": settings.max_iterations * len(_WORKERS) + 10},
+            )
         return ResearchState.model_validate(result)
