@@ -8,6 +8,7 @@ import logging
 from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime
+from functools import lru_cache
 from time import perf_counter
 from typing import Any
 from uuid import UUID, uuid4
@@ -17,8 +18,12 @@ from multi_agent_research_lab.core.config import get_settings
 logger = logging.getLogger("multi_agent_research_lab.trace")
 
 
+@lru_cache(maxsize=1)
 def _langsmith_client() -> tuple[Any, str] | tuple[None, None]:
-    """Best-effort LangSmith client. Returns (None, None) unless configured/installed."""
+    """Best-effort LangSmith client, built once and reused for every span.
+
+    Returns (None, None) unless configured/installed.
+    """
 
     settings = get_settings()
     if not settings.langsmith_api_key:

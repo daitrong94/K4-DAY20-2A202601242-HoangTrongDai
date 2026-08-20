@@ -151,6 +151,12 @@ def multi_agent(
         console.print(
             Panel.fit("\n".join(result.errors), title="Warnings / Errors", style="yellow")
         )
+    settings = get_settings()
+    if settings.langsmith_api_key:
+        console.print(
+            f"[dim]Traced to LangSmith project '{settings.langsmith_project}' "
+            "- see https://smith.langchain.com[/dim]"
+        )
 
 
 @app.command()
