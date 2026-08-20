@@ -144,6 +144,8 @@ Học viên nộp:
 
 1. GitHub repo cá nhân.
 2. Screenshot trace hoặc link trace.
+   - Link trace (LangSmith, public): https://smith.langchain.com/public/34272861-731c-4d97-85a5-a32eb7ad9d02/r/6bf74ff8-6ee1-4534-8769-668216506731
+   - Trace gồm root `multi_agent_workflow` và 4 agent con lồng bên trong: `researcher.run` -> `analyst.run` -> `writer.run` -> `critic.run`.
 3. `reports/benchmark_report.md` so sánh single vs multi-agent.
 4. Một đoạn giải thích failure mode và cách fix.
 
