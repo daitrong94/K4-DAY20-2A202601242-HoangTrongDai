@@ -145,7 +145,10 @@ Học viên nộp:
 1. GitHub repo cá nhân.
 2. Screenshot trace hoặc link trace -> `reports/trace_link.md`.
 3. `reports/benchmark_report.md` so sánh single vs multi-agent.
-4. Một đoạn giải thích failure mode và cách fix.
+4. Một đoạn giải thích failure mode và cách fix -> `docs/design_template.md` (cột "Failure
+   mode" trong bảng Agent roles, và mục "Guardrails").
+
+Xem thêm `docs/exit_ticket.md` cho 2 câu hỏi ở mục Exit ticket bên dưới.
 
 ## References
 

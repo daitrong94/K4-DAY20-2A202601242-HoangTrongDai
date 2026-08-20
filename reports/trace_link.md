@@ -1,6 +1,6 @@
 # Trace Link
 
-Multi-agent pipeline trace (LangSmith, public - no login required):
+Multi-agent pipeline trace:
 
 https://smith.langchain.com/public/34272861-731c-4d97-85a5-a32eb7ad9d02/r/6bf74ff8-6ee1-4534-8769-668216506731
 
