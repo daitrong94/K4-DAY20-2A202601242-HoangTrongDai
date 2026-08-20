@@ -1,7 +1,7 @@
-.PHONY: install test lint format typecheck run-baseline run-multi clean
+.PHONY: install test lint format typecheck run-baseline run-multi ui clean
 
 install:
-	pip install -e ".[dev,llm]"
+	pip install -e ".[dev,llm,ui]"
 
 test:
 	pytest
@@ -20,6 +20,9 @@ run-baseline:
 
 run-multi:
 	python -m multi_agent_research_lab.cli multi-agent --query "Research GraphRAG state-of-the-art"
+
+ui:
+	streamlit run src/multi_agent_research_lab/ui/app.py
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .mypy_cache dist build *.egg-info

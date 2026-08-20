@@ -12,21 +12,17 @@ from rich.table import Table
 
 from multi_agent_research_lab.core.config import get_settings
 from multi_agent_research_lab.core.errors import AgentExecutionError, StudentTodoError
-from multi_agent_research_lab.core.schemas import AgentName, AgentResult, ResearchQuery
+from multi_agent_research_lab.core.schemas import ResearchQuery
 from multi_agent_research_lab.core.state import ResearchState
 from multi_agent_research_lab.evaluation.benchmark import run_benchmark
 from multi_agent_research_lab.evaluation.report import render_markdown_report
 from multi_agent_research_lab.graph.workflow import MultiAgentWorkflow
 from multi_agent_research_lab.observability.logging import configure_logging
-from multi_agent_research_lab.services.llm_client import LLMClient
+from multi_agent_research_lab.runners import run_baseline as _run_baseline
+from multi_agent_research_lab.runners import run_multi_agent as _run_multi_agent
 
 app = typer.Typer(help="Multi-Agent Research Lab starter CLI")
 console = Console()
-
-_BASELINE_SYSTEM_PROMPT = (
-    "You are a helpful research assistant. Answer directly and concisely from your own "
-    "knowledge; you have no search tool in this baseline mode."
-)
 
 
 def _init() -> None:
@@ -46,31 +42,6 @@ def _parse_query(query: str) -> ResearchQuery:
             )
         )
         raise typer.Exit(code=1) from exc
-
-
-def _run_baseline(query: str) -> ResearchState:
-    """Single-agent baseline: one direct LLM call, no tools, no other agents."""
-
-    state = ResearchState(request=ResearchQuery(query=query))
-    response = LLMClient().complete(_BASELINE_SYSTEM_PROMPT, query)
-    state.final_answer = response.content
-    state.agent_results.append(
-        AgentResult(
-            agent=AgentName.WRITER,
-            content=response.content,
-            metadata={
-                "input_tokens": response.input_tokens,
-                "output_tokens": response.output_tokens,
-                "cost_usd": response.cost_usd,
-            },
-        )
-    )
-    return state
-
-
-def _run_multi_agent(query: str) -> ResearchState:
-    state = ResearchState(request=ResearchQuery(query=query))
-    return MultiAgentWorkflow().run(state)
 
 
 def _render_pipeline_table(state: ResearchState) -> Table:

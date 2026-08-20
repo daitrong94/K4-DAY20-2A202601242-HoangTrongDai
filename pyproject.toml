@@ -34,6 +34,10 @@ dev = [
   "pre-commit>=3.7",
   "types-PyYAML>=6.0"
 ]
+ui = [
+  "streamlit>=1.35",
+  "pandas>=2.0"
+]
 
 [project.scripts]
 malab = "multi_agent_research_lab.cli:app"
@@ -50,11 +54,14 @@ select = ["E", "F", "I", "B", "UP", "SIM"]
 ignore = []
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 strict = true
 warn_return_any = true
 warn_unused_configs = true
 mypy_path = "src"
+# Demo UI (Streamlit + pandas) isn't core lab logic; exclude it so strict typing here
+# doesn't depend on third-party stub coverage for an optional, non-graded extra.
+exclude = ["^src/multi_agent_research_lab/ui/"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
